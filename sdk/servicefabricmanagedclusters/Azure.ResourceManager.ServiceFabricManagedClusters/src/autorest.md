@@ -8,8 +8,8 @@ azure-arm: true
 csharp: true
 library-name: ServiceFabricManagedClusters
 namespace: Azure.ResourceManager.ServiceFabricManagedClusters
-require:  https://github.com/Azure/azure-rest-api-specs/blob/f17b769690a46d858134ee68ef0d89635083b560/specification/servicefabricmanagedclusters/resource-manager/readme.md
-#tag: package-2024-09-preview
+require:  C:\Users\iliu\Documents\azure-rest-api-specs\specification\servicefabricmanagedclusters\resource-manager\readme.md
+#tag: package-2024-11-preview
 output-folder: $(this-folder)/Generated
 clear-output-folder: true
 sample-gen:
@@ -96,7 +96,7 @@ rename-mapping:
   ManagedCluster.properties.ipv6Address: -|ip-address
   ManagedCluster.properties.zonalResiliency: HasZoneResiliency
   ManagedCluster.properties.enableHttpGatewayExclusiveAuthMode: IsHttpGatewayExclusiveAuthModeEnabled
-  
+
   Subnet: ManagedClusterSubnet
   Subnet.enableIpv6: IsIPv6Enabled
   Subnet.networkSecurityGroupId: -|arm-id
@@ -178,7 +178,7 @@ rename-mapping:
   PrivateIPAddressVersion: ServiceFabricManagedClusterPrivateIPAddressVersion
   PublicIPAddressVersion: ServiceFabricManagedClusterPublicIPAddressVersion
   IpConfiguration: ServiceFabricManagedClusterIPConfiguration
-  IpConfigurationPublicIPAddressConfiguration: ServiceFabricManagedClusterPublicIPAddressConfiguration
+  PublicIPAddressConfiguration: ServiceFabricManagedClusterPublicIPAddressConfiguration
   ManagedMaintenanceWindowStatus.lastWindowStatusUpdateAtUTC: LastWindowStatusUpdatedOn
   ManagedMaintenanceWindowStatus.lastWindowStartTimeUTC: LastWindowStartOn
   ManagedMaintenanceWindowStatus.lastWindowEndTimeUTC: LastWindowEndOn
