@@ -38,7 +38,7 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Tests
         public async Task CreateCommonClient()
         {
             ArmClientOptions options = new ArmClientOptions();
-            options.SetApiVersion(UserAssignedIdentityResource.ResourceType, "2018-11-30");
+            options.SetApiVersion(UserAssignedIdentityResource.ResourceType, "2024-11-01-preview");
 
             Client = GetArmClient(options);
             DefaultSubscription = await Client.GetDefaultSubscriptionAsync().ConfigureAwait(false);
