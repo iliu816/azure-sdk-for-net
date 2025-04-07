@@ -67,7 +67,7 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Tests
         }
 
         [RecordedTest]
-        public async Task UpdateTest()
+        public async Task UpdateTagsTest()
         {
             //Update
             var updateNodetype_lro = await this.serviveFabricManagedClusterNodeType.UpdateAsync(WaitUntil.Completed, new ServiceFabricManagedNodeTypePatch()
@@ -83,6 +83,21 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Tests
             var nodeTypeTagsDataValues = updateNodetype.Data.Tags;
             Assert.AreEqual(nodeTypeTagsDataValues["UpdateKey1"], "UpdateValue1");
             Assert.AreEqual(nodeTypeTagsDataValues["UpdateKey2"], "UpdateValue2");
+        }
+
+        [RecordedTest]
+        public async Task UpdateCapacityTest()
+        {
+            var targetCount = 7;
+
+            //Update
+            var updateNodetype_lro = await this.serviveFabricManagedClusterNodeType.UpdateAsync(WaitUntil.Completed, new ServiceFabricManagedNodeTypePatch()
+            {
+                Sku = new NodeTypeSku(targetCount)
+            });
+
+            ServiceFabricManagedNodeTypeResource updateNodetype = updateNodetype_lro.Value;
+            Assert.AreEqual(updateNodetype.Data.Sku.Capacity, targetCount);
         }
     }
 }

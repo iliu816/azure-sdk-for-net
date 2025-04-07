@@ -47,5 +47,40 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Tests
             ServiceFabricManagedClusterData resourceData = serviceFabricManagedCluster.Data;
             Assert.AreEqual(clusterName, resourceData.Name);
         }
+
+        [Test]
+        [RecordedTest]
+        public async Task ListClusterTestAsync()
+        {
+            resourceGroupResource = await CreateResourceGroupWithTag();
+
+            clusterName = Recording.GenerateAssetName("sfmctestclusternet");
+            clusterCollection = resourceGroupResource.GetServiceFabricManagedClusters();
+
+            ServiceFabricManagedClusterData data = new ServiceFabricManagedClusterData(new AzureLocation("westus"))
+            {
+                DnsName = clusterName,
+                AdminUserName = "Myusername4",
+                AdminPassword = "Sfmcpass5!",
+                Sku = new ServiceFabricManagedClustersSku(ServiceFabricManagedClustersSkuName.Standard),
+                ClientConnectionPort = 19000,
+                HttpGatewayConnectionPort = 19080
+            };
+            data.Tags.Add(new KeyValuePair<string, string>("SFRP.EnableDiagnosticMI", "true"));
+
+            serviceFabricManagedCluster = (await clusterCollection.CreateOrUpdateAsync(WaitUntil.Completed, clusterName, data)).Value;
+
+            ServiceFabricManagedClusterData resourceData = serviceFabricManagedCluster.Data;
+            Assert.AreEqual(clusterName, resourceData.Name);
+
+            var clustersList = clusterCollection.GetAllAsync();
+            var clusterCount = 0;
+            await foreach (ServiceFabricManagedClusterResource cluster in clustersList)
+            {
+                clusterCount++;
+            }
+
+            Assert.AreEqual(clusterCount, 1);
+        }
     }
 }
