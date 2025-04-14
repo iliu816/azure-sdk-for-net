@@ -95,6 +95,32 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Tests
             return clusterLro.Value;
         }
 
+        protected async Task<ServiceFabricManagedClusterResource> CreateServiceFabricManagedClusterZoneResilient(ResourceGroupResource resourceGroup, string clusterName)
+        {
+            string dnsName = Recording.GenerateAssetName("netsdk");
+            var data = new ServiceFabricManagedClusterData(DefaultLocation)
+            {
+                Sku = new ServiceFabricManagedClustersSku("Standard"),
+                DnsName = dnsName,
+                ClientConnectionPort = 19000,
+                HttpGatewayConnectionPort = 19080,
+                ClusterUpgradeMode = ManagedClusterUpgradeMode.Automatic,
+                HasZoneResiliency = true,
+                AdminUserName = "vmadmin",
+                AdminPassword = "Password123!@#",
+                Clients =
+                {
+                    new ManagedClusterClientCertificate(true)
+                    {
+                        Thumbprint = BinaryData.FromString("\"123BDACDCDFB2C7B250192C6078E47D1E1DB119B\""),
+                    }
+                }
+            };
+            data.Tags.Add(new KeyValuePair<string, string>("SFRP.EnableDiagnosticMI", "true"));
+            var clusterLro = await resourceGroup.GetServiceFabricManagedClusters().CreateOrUpdateAsync(WaitUntil.Completed, clusterName, data);
+            return clusterLro.Value;
+        }
+
         protected async Task<ServiceFabricManagedNodeTypeResource> CreateServiceFabricManagedNodeType(ServiceFabricManagedClusterResource cluster, string nodeTypeName, bool isPrimaryNode)
         {
             var data = new ServiceFabricManagedNodeTypeData()

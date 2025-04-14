@@ -485,11 +485,8 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Samples
             ServiceFabricManagedNodeTypeResource serviceFabricManagedNodeType = client.GetServiceFabricManagedNodeTypeResource(serviceFabricManagedNodeTypeResourceId);
 
             // invoke the operation
-            FaultSimulationContent content = new ZoneFaultSimulationContent
-            {
-                Zones = { "2" },
-            };
-            ArmOperation<FaultSimulation> lro = await serviceFabricManagedNodeType.StartFaultSimulationAsync(WaitUntil.Completed, content);
+            FaultSimulationContentWrapper faultSimulationContentWrapper = new FaultSimulationContentWrapper(null);
+            ArmOperation<FaultSimulation> lro = await serviceFabricManagedNodeType.StartFaultSimulationAsync(WaitUntil.Completed, faultSimulationContentWrapper);
             FaultSimulation result = lro.Value;
 
             Console.WriteLine($"Succeeded: {result}");

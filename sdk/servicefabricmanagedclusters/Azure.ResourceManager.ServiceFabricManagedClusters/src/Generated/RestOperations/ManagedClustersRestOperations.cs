@@ -768,7 +768,7 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
             }
         }
 
-        internal RequestUriBuilder CreateStartFaultSimulationRequestUri(string subscriptionId, string resourceGroupName, string clusterName, FaultSimulationContent content)
+        internal RequestUriBuilder CreateStartFaultSimulationRequestUri(string subscriptionId, string resourceGroupName, string clusterName, FaultSimulationContentWrapper faultSimulationContentWrapper)
         {
             var uri = new RawRequestUriBuilder();
             uri.Reset(_endpoint);
@@ -783,7 +783,7 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
             return uri;
         }
 
-        internal HttpMessage CreateStartFaultSimulationRequest(string subscriptionId, string resourceGroupName, string clusterName, FaultSimulationContent content)
+        internal HttpMessage CreateStartFaultSimulationRequest(string subscriptionId, string resourceGroupName, string clusterName, FaultSimulationContentWrapper faultSimulationContentWrapper)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -801,9 +801,9 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Content-Type", "application/json");
-            var content0 = new Utf8JsonRequestContent();
-            content0.JsonWriter.WriteObjectValue(content, ModelSerializationExtensions.WireOptions);
-            request.Content = content0;
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(faultSimulationContentWrapper, ModelSerializationExtensions.WireOptions);
+            request.Content = content;
             _userAgent.Apply(message);
             return message;
         }
@@ -812,18 +812,18 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
         /// <param name="subscriptionId"> The ID of the target subscription. </param>
         /// <param name="resourceGroupName"> The name of the resource group. The name is case insensitive. </param>
         /// <param name="clusterName"> The name of the cluster resource. </param>
-        /// <param name="content"> parameters describing the fault simulation. </param>
+        /// <param name="faultSimulationContentWrapper"> parameters describing the fault simulation. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/>, <paramref name="resourceGroupName"/>, <paramref name="clusterName"/> or <paramref name="content"/> is null. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/>, <paramref name="resourceGroupName"/>, <paramref name="clusterName"/> or <paramref name="faultSimulationContentWrapper"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/>, <paramref name="resourceGroupName"/> or <paramref name="clusterName"/> is an empty string, and was expected to be non-empty. </exception>
-        public async Task<Response> StartFaultSimulationAsync(string subscriptionId, string resourceGroupName, string clusterName, FaultSimulationContent content, CancellationToken cancellationToken = default)
+        public async Task<Response> StartFaultSimulationAsync(string subscriptionId, string resourceGroupName, string clusterName, FaultSimulationContentWrapper faultSimulationContentWrapper, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNullOrEmpty(subscriptionId, nameof(subscriptionId));
             Argument.AssertNotNullOrEmpty(resourceGroupName, nameof(resourceGroupName));
             Argument.AssertNotNullOrEmpty(clusterName, nameof(clusterName));
-            Argument.AssertNotNull(content, nameof(content));
+            Argument.AssertNotNull(faultSimulationContentWrapper, nameof(faultSimulationContentWrapper));
 
-            using var message = CreateStartFaultSimulationRequest(subscriptionId, resourceGroupName, clusterName, content);
+            using var message = CreateStartFaultSimulationRequest(subscriptionId, resourceGroupName, clusterName, faultSimulationContentWrapper);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
@@ -839,18 +839,18 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
         /// <param name="subscriptionId"> The ID of the target subscription. </param>
         /// <param name="resourceGroupName"> The name of the resource group. The name is case insensitive. </param>
         /// <param name="clusterName"> The name of the cluster resource. </param>
-        /// <param name="content"> parameters describing the fault simulation. </param>
+        /// <param name="faultSimulationContentWrapper"> parameters describing the fault simulation. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/>, <paramref name="resourceGroupName"/>, <paramref name="clusterName"/> or <paramref name="content"/> is null. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/>, <paramref name="resourceGroupName"/>, <paramref name="clusterName"/> or <paramref name="faultSimulationContentWrapper"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/>, <paramref name="resourceGroupName"/> or <paramref name="clusterName"/> is an empty string, and was expected to be non-empty. </exception>
-        public Response StartFaultSimulation(string subscriptionId, string resourceGroupName, string clusterName, FaultSimulationContent content, CancellationToken cancellationToken = default)
+        public Response StartFaultSimulation(string subscriptionId, string resourceGroupName, string clusterName, FaultSimulationContentWrapper faultSimulationContentWrapper, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNullOrEmpty(subscriptionId, nameof(subscriptionId));
             Argument.AssertNotNullOrEmpty(resourceGroupName, nameof(resourceGroupName));
             Argument.AssertNotNullOrEmpty(clusterName, nameof(clusterName));
-            Argument.AssertNotNull(content, nameof(content));
+            Argument.AssertNotNull(faultSimulationContentWrapper, nameof(faultSimulationContentWrapper));
 
-            using var message = CreateStartFaultSimulationRequest(subscriptionId, resourceGroupName, clusterName, content);
+            using var message = CreateStartFaultSimulationRequest(subscriptionId, resourceGroupName, clusterName, faultSimulationContentWrapper);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {

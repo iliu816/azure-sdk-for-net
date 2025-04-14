@@ -115,16 +115,17 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Tests
             ValidatePurviewAccount(secondaryNodeType.Data, secondaryNodeTypeName);
 
             // Start Fault Simulation
-            FaultSimulationContentBody body = new ZoneFaultSimulationContentBody
+            FaultSimulationContent content = new ZoneFaultSimulationContent
             {
                 Zones = { "2" },
                 FaultKind = "Zone",
             };
-            FaultSimulationContent content = new FaultSimulationContent(body);
+
+            FaultSimulationContentWrapper faultSimulationContentWrapper = new FaultSimulationContentWrapper(content);
 
             try
             {
-                var startFaultSimulationResult = (await secondaryNodeType.StartFaultSimulationAsync(WaitUntil.Completed, content)).Value;
+                var startFaultSimulationResult = (await secondaryNodeType.StartFaultSimulationAsync(WaitUntil.Completed, faultSimulationContentWrapper)).Value;
 
                 Assert.AreEqual(startFaultSimulationResult.Status, FaultSimulationStatus.Active);
 
