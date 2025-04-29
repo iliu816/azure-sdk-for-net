@@ -39,7 +39,14 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Models
             if (Optional.IsDefined(Thumbprint))
             {
                 writer.WritePropertyName("thumbprint"u8);
-                writer.WriteStringValue(Thumbprint);
+#if NET6_0_OR_GREATER
+				writer.WriteRawValue(Thumbprint);
+#else
+                using (JsonDocument document = JsonDocument.Parse(Thumbprint, ModelSerializationExtensions.JsonDocumentOptions))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
+#endif
             }
             if (Optional.IsDefined(CommonName))
             {
@@ -49,7 +56,14 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Models
             if (Optional.IsDefined(IssuerThumbprint))
             {
                 writer.WritePropertyName("issuerThumbprint"u8);
-                writer.WriteStringValue(IssuerThumbprint);
+#if NET6_0_OR_GREATER
+				writer.WriteRawValue(IssuerThumbprint);
+#else
+                using (JsonDocument document = JsonDocument.Parse(IssuerThumbprint, ModelSerializationExtensions.JsonDocumentOptions))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
+#endif
             }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
@@ -89,9 +103,9 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Models
                 return null;
             }
             bool isAdmin = default;
-            string thumbprint = default;
+            BinaryData thumbprint = default;
             string commonName = default;
-            string issuerThumbprint = default;
+            BinaryData issuerThumbprint = default;
             IDictionary<string, BinaryData> serializedAdditionalRawData = default;
             Dictionary<string, BinaryData> rawDataDictionary = new Dictionary<string, BinaryData>();
             foreach (var property in element.EnumerateObject())
@@ -103,7 +117,11 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Models
                 }
                 if (property.NameEquals("thumbprint"u8))
                 {
-                    thumbprint = property.Value.GetString();
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    thumbprint = BinaryData.FromString(property.Value.GetRawText());
                     continue;
                 }
                 if (property.NameEquals("commonName"u8))
@@ -113,7 +131,11 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Models
                 }
                 if (property.NameEquals("issuerThumbprint"u8))
                 {
-                    issuerThumbprint = property.Value.GetString();
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    issuerThumbprint = BinaryData.FromString(property.Value.GetRawText());
                     continue;
                 }
                 if (options.Format != "W")

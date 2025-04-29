@@ -78,7 +78,19 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
                 writer.WriteStartArray();
                 foreach (var item in ClusterCertificateThumbprints)
                 {
-                    writer.WriteStringValue(item);
+                    if (item == null)
+                    {
+                        writer.WriteNullValue();
+                        continue;
+                    }
+#if NET6_0_OR_GREATER
+				writer.WriteRawValue(item);
+#else
+                    using (JsonDocument document = JsonDocument.Parse(item, ModelSerializationExtensions.JsonDocumentOptions))
+                    {
+                        JsonSerializer.Serialize(writer, document.RootElement);
+                    }
+#endif
                 }
                 writer.WriteEndArray();
             }
@@ -338,7 +350,7 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
             IPAddress ipv4Address = default;
             Guid? clusterId = default;
             ServiceFabricManagedClusterState? clusterState = default;
-            IReadOnlyList<string> clusterCertificateThumbprints = default;
+            IReadOnlyList<BinaryData> clusterCertificateThumbprints = default;
             int? clientConnectionPort = default;
             int? httpGatewayConnectionPort = default;
             string adminUserName = default;
@@ -466,7 +478,7 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
                         }
                         if (property0.NameEquals("clusterId"u8))
                         {
-                            if (property0.Value.ValueKind == JsonValueKind.Null)
+                            if (property0.Value.ValueKind == JsonValueKind.Null || property0.Value.ValueKind == JsonValueKind.String && property0.Value.GetString().Length == 0)
                             {
                                 continue;
                             }
@@ -488,10 +500,17 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
                             {
                                 continue;
                             }
-                            List<string> array = new List<string>();
+                            List<BinaryData> array = new List<BinaryData>();
                             foreach (var item in property0.Value.EnumerateArray())
                             {
-                                array.Add(item.GetString());
+                                if (item.ValueKind == JsonValueKind.Null)
+                                {
+                                    array.Add(null);
+                                }
+                                else
+                                {
+                                    array.Add(BinaryData.FromString(item.GetRawText()));
+                                }
                             }
                             clusterCertificateThumbprints = array;
                             continue;
@@ -861,7 +880,7 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
                 ipv4Address,
                 clusterId,
                 clusterState,
-                clusterCertificateThumbprints ?? new ChangeTrackingList<string>(),
+                clusterCertificateThumbprints ?? new ChangeTrackingList<BinaryData>(),
                 clientConnectionPort,
                 httpGatewayConnectionPort,
                 adminUserName,

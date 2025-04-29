@@ -37,7 +37,7 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
             _userAgent = new TelemetryDetails(GetType().Assembly, applicationId);
         }
 
-        internal RequestUriBuilder CreateGetRequestUri(string subscriptionId, string location, string clusterVersion)
+        internal RequestUriBuilder CreateGetRequestUri(string subscriptionId, AzureLocation location, string clusterVersion)
         {
             var uri = new RawRequestUriBuilder();
             uri.Reset(_endpoint);
@@ -51,7 +51,7 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
             return uri;
         }
 
-        internal HttpMessage CreateGetRequest(string subscriptionId, string location, string clusterVersion)
+        internal HttpMessage CreateGetRequest(string subscriptionId, AzureLocation location, string clusterVersion)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -76,12 +76,11 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
         /// <param name="location"> The location for the cluster code versions. This is different from cluster location. </param>
         /// <param name="clusterVersion"> The cluster code version. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/>, <paramref name="location"/> or <paramref name="clusterVersion"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/>, <paramref name="location"/> or <paramref name="clusterVersion"/> is an empty string, and was expected to be non-empty. </exception>
-        public async Task<Response<ServiceFabricManagedClusterVersion>> GetAsync(string subscriptionId, string location, string clusterVersion, CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/> or <paramref name="clusterVersion"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/> or <paramref name="clusterVersion"/> is an empty string, and was expected to be non-empty. </exception>
+        public async Task<Response<ServiceFabricManagedClusterVersion>> GetAsync(string subscriptionId, AzureLocation location, string clusterVersion, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNullOrEmpty(subscriptionId, nameof(subscriptionId));
-            Argument.AssertNotNullOrEmpty(location, nameof(location));
             Argument.AssertNotNullOrEmpty(clusterVersion, nameof(clusterVersion));
 
             using var message = CreateGetRequest(subscriptionId, location, clusterVersion);
@@ -105,12 +104,11 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
         /// <param name="location"> The location for the cluster code versions. This is different from cluster location. </param>
         /// <param name="clusterVersion"> The cluster code version. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/>, <paramref name="location"/> or <paramref name="clusterVersion"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/>, <paramref name="location"/> or <paramref name="clusterVersion"/> is an empty string, and was expected to be non-empty. </exception>
-        public Response<ServiceFabricManagedClusterVersion> Get(string subscriptionId, string location, string clusterVersion, CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/> or <paramref name="clusterVersion"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/> or <paramref name="clusterVersion"/> is an empty string, and was expected to be non-empty. </exception>
+        public Response<ServiceFabricManagedClusterVersion> Get(string subscriptionId, AzureLocation location, string clusterVersion, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNullOrEmpty(subscriptionId, nameof(subscriptionId));
-            Argument.AssertNotNullOrEmpty(location, nameof(location));
             Argument.AssertNotNullOrEmpty(clusterVersion, nameof(clusterVersion));
 
             using var message = CreateGetRequest(subscriptionId, location, clusterVersion);
@@ -129,7 +127,7 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
             }
         }
 
-        internal RequestUriBuilder CreateListRequestUri(string subscriptionId, string location)
+        internal RequestUriBuilder CreateListRequestUri(string subscriptionId, AzureLocation location)
         {
             var uri = new RawRequestUriBuilder();
             uri.Reset(_endpoint);
@@ -142,7 +140,7 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
             return uri;
         }
 
-        internal HttpMessage CreateListRequest(string subscriptionId, string location)
+        internal HttpMessage CreateListRequest(string subscriptionId, AzureLocation location)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -165,12 +163,11 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
         /// <param name="subscriptionId"> The ID of the target subscription. The value must be an UUID. </param>
         /// <param name="location"> The location for the cluster code versions. This is different from cluster location. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/> or <paramref name="location"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/> or <paramref name="location"/> is an empty string, and was expected to be non-empty. </exception>
-        public async Task<Response<IReadOnlyList<ServiceFabricManagedClusterVersion>>> ListAsync(string subscriptionId, string location, CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/> is an empty string, and was expected to be non-empty. </exception>
+        public async Task<Response<IReadOnlyList<ServiceFabricManagedClusterVersion>>> ListAsync(string subscriptionId, AzureLocation location, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNullOrEmpty(subscriptionId, nameof(subscriptionId));
-            Argument.AssertNotNullOrEmpty(location, nameof(location));
 
             using var message = CreateListRequest(subscriptionId, location);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
@@ -197,12 +194,11 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
         /// <param name="subscriptionId"> The ID of the target subscription. The value must be an UUID. </param>
         /// <param name="location"> The location for the cluster code versions. This is different from cluster location. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/> or <paramref name="location"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/> or <paramref name="location"/> is an empty string, and was expected to be non-empty. </exception>
-        public Response<IReadOnlyList<ServiceFabricManagedClusterVersion>> List(string subscriptionId, string location, CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/> is an empty string, and was expected to be non-empty. </exception>
+        public Response<IReadOnlyList<ServiceFabricManagedClusterVersion>> List(string subscriptionId, AzureLocation location, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNullOrEmpty(subscriptionId, nameof(subscriptionId));
-            Argument.AssertNotNullOrEmpty(location, nameof(location));
 
             using var message = CreateListRequest(subscriptionId, location);
             _pipeline.Send(message, cancellationToken);
@@ -225,7 +221,7 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
             }
         }
 
-        internal RequestUriBuilder CreateGetManagedClusterVersionByEnvironmentRequestUri(string subscriptionId, string location, ManagedClusterVersionEnvironment environment, string clusterVersion)
+        internal RequestUriBuilder CreateGetManagedClusterVersionByEnvironmentRequestUri(string subscriptionId, AzureLocation location, ManagedClusterVersionEnvironment environment, string clusterVersion)
         {
             var uri = new RawRequestUriBuilder();
             uri.Reset(_endpoint);
@@ -241,7 +237,7 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
             return uri;
         }
 
-        internal HttpMessage CreateGetManagedClusterVersionByEnvironmentRequest(string subscriptionId, string location, ManagedClusterVersionEnvironment environment, string clusterVersion)
+        internal HttpMessage CreateGetManagedClusterVersionByEnvironmentRequest(string subscriptionId, AzureLocation location, ManagedClusterVersionEnvironment environment, string clusterVersion)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -269,12 +265,11 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
         /// <param name="environment"> The operating system of the cluster. </param>
         /// <param name="clusterVersion"> The cluster code version. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/>, <paramref name="location"/> or <paramref name="clusterVersion"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/>, <paramref name="location"/> or <paramref name="clusterVersion"/> is an empty string, and was expected to be non-empty. </exception>
-        public async Task<Response<ServiceFabricManagedClusterVersion>> GetManagedClusterVersionByEnvironmentAsync(string subscriptionId, string location, ManagedClusterVersionEnvironment environment, string clusterVersion, CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/> or <paramref name="clusterVersion"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/> or <paramref name="clusterVersion"/> is an empty string, and was expected to be non-empty. </exception>
+        public async Task<Response<ServiceFabricManagedClusterVersion>> GetManagedClusterVersionByEnvironmentAsync(string subscriptionId, AzureLocation location, ManagedClusterVersionEnvironment environment, string clusterVersion, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNullOrEmpty(subscriptionId, nameof(subscriptionId));
-            Argument.AssertNotNullOrEmpty(location, nameof(location));
             Argument.AssertNotNullOrEmpty(clusterVersion, nameof(clusterVersion));
 
             using var message = CreateGetManagedClusterVersionByEnvironmentRequest(subscriptionId, location, environment, clusterVersion);
@@ -299,12 +294,11 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
         /// <param name="environment"> The operating system of the cluster. </param>
         /// <param name="clusterVersion"> The cluster code version. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/>, <paramref name="location"/> or <paramref name="clusterVersion"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/>, <paramref name="location"/> or <paramref name="clusterVersion"/> is an empty string, and was expected to be non-empty. </exception>
-        public Response<ServiceFabricManagedClusterVersion> GetManagedClusterVersionByEnvironment(string subscriptionId, string location, ManagedClusterVersionEnvironment environment, string clusterVersion, CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/> or <paramref name="clusterVersion"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/> or <paramref name="clusterVersion"/> is an empty string, and was expected to be non-empty. </exception>
+        public Response<ServiceFabricManagedClusterVersion> GetManagedClusterVersionByEnvironment(string subscriptionId, AzureLocation location, ManagedClusterVersionEnvironment environment, string clusterVersion, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNullOrEmpty(subscriptionId, nameof(subscriptionId));
-            Argument.AssertNotNullOrEmpty(location, nameof(location));
             Argument.AssertNotNullOrEmpty(clusterVersion, nameof(clusterVersion));
 
             using var message = CreateGetManagedClusterVersionByEnvironmentRequest(subscriptionId, location, environment, clusterVersion);
@@ -323,7 +317,7 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
             }
         }
 
-        internal RequestUriBuilder CreateListByEnvironmentRequestUri(string subscriptionId, string location, ManagedClusterVersionEnvironment environment)
+        internal RequestUriBuilder CreateListByEnvironmentRequestUri(string subscriptionId, AzureLocation location, ManagedClusterVersionEnvironment environment)
         {
             var uri = new RawRequestUriBuilder();
             uri.Reset(_endpoint);
@@ -338,7 +332,7 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
             return uri;
         }
 
-        internal HttpMessage CreateListByEnvironmentRequest(string subscriptionId, string location, ManagedClusterVersionEnvironment environment)
+        internal HttpMessage CreateListByEnvironmentRequest(string subscriptionId, AzureLocation location, ManagedClusterVersionEnvironment environment)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -364,12 +358,11 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
         /// <param name="location"> The location for the cluster code versions. This is different from cluster location. </param>
         /// <param name="environment"> The operating system of the cluster. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/> or <paramref name="location"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/> or <paramref name="location"/> is an empty string, and was expected to be non-empty. </exception>
-        public async Task<Response<IReadOnlyList<ServiceFabricManagedClusterVersion>>> ListByEnvironmentAsync(string subscriptionId, string location, ManagedClusterVersionEnvironment environment, CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/> is an empty string, and was expected to be non-empty. </exception>
+        public async Task<Response<IReadOnlyList<ServiceFabricManagedClusterVersion>>> ListByEnvironmentAsync(string subscriptionId, AzureLocation location, ManagedClusterVersionEnvironment environment, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNullOrEmpty(subscriptionId, nameof(subscriptionId));
-            Argument.AssertNotNullOrEmpty(location, nameof(location));
 
             using var message = CreateListByEnvironmentRequest(subscriptionId, location, environment);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
@@ -397,12 +390,11 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
         /// <param name="location"> The location for the cluster code versions. This is different from cluster location. </param>
         /// <param name="environment"> The operating system of the cluster. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/> or <paramref name="location"/> is null. </exception>
-        /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/> or <paramref name="location"/> is an empty string, and was expected to be non-empty. </exception>
-        public Response<IReadOnlyList<ServiceFabricManagedClusterVersion>> ListByEnvironment(string subscriptionId, string location, ManagedClusterVersionEnvironment environment, CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/> is an empty string, and was expected to be non-empty. </exception>
+        public Response<IReadOnlyList<ServiceFabricManagedClusterVersion>> ListByEnvironment(string subscriptionId, AzureLocation location, ManagedClusterVersionEnvironment environment, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNullOrEmpty(subscriptionId, nameof(subscriptionId));
-            Argument.AssertNotNullOrEmpty(location, nameof(location));
 
             using var message = CreateListByEnvironmentRequest(subscriptionId, location, environment);
             _pipeline.Send(message, cancellationToken);

@@ -223,7 +223,7 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters
         /// <summary> Identities to assign to the virtual machine scale set under the node type. </summary>
         internal VmManagedIdentity VmManagedIdentity { get; set; }
         /// <summary> The list of user identities associated with the virtual machine scale set under the node type. Each entry will be an ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'. </summary>
-        public IList<string> UserAssignedIdentities
+        public IList<ResourceIdentifier> UserAssignedIdentities
         {
             get
             {

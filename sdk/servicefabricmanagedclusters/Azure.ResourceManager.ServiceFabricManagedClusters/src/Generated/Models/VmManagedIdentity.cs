@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using Azure.Core;
 
 namespace Azure.ResourceManager.ServiceFabricManagedClusters.Models
 {
@@ -48,19 +49,19 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Models
         /// <summary> Initializes a new instance of <see cref="VmManagedIdentity"/>. </summary>
         public VmManagedIdentity()
         {
-            UserAssignedIdentities = new ChangeTrackingList<string>();
+            UserAssignedIdentities = new ChangeTrackingList<ResourceIdentifier>();
         }
 
         /// <summary> Initializes a new instance of <see cref="VmManagedIdentity"/>. </summary>
         /// <param name="userAssignedIdentities"> The list of user identities associated with the virtual machine scale set under the node type. Each entry will be an ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal VmManagedIdentity(IList<string> userAssignedIdentities, IDictionary<string, BinaryData> serializedAdditionalRawData)
+        internal VmManagedIdentity(IList<ResourceIdentifier> userAssignedIdentities, IDictionary<string, BinaryData> serializedAdditionalRawData)
         {
             UserAssignedIdentities = userAssignedIdentities;
             _serializedAdditionalRawData = serializedAdditionalRawData;
         }
 
         /// <summary> The list of user identities associated with the virtual machine scale set under the node type. Each entry will be an ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'. </summary>
-        public IList<string> UserAssignedIdentities { get; }
+        public IList<ResourceIdentifier> UserAssignedIdentities { get; }
     }
 }

@@ -41,7 +41,7 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Models
             writer.WritePropertyName("publisher"u8);
             writer.WriteStringValue(Publisher);
             writer.WritePropertyName("type"u8);
-            writer.WriteStringValue(Type);
+            writer.WriteStringValue(VmssExtensionPropertiesType);
             writer.WritePropertyName("typeHandlerVersion"u8);
             writer.WriteStringValue(TypeHandlerVersion);
             if (Optional.IsDefined(AutoUpgradeMinorVersion))
@@ -52,12 +52,26 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Models
             if (Optional.IsDefined(Settings))
             {
                 writer.WritePropertyName("settings"u8);
-                writer.WriteObjectValue(Settings, options);
+#if NET6_0_OR_GREATER
+				writer.WriteRawValue(Settings);
+#else
+                using (JsonDocument document = JsonDocument.Parse(Settings, ModelSerializationExtensions.JsonDocumentOptions))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
+#endif
             }
             if (Optional.IsDefined(ProtectedSettings))
             {
                 writer.WritePropertyName("protectedSettings"u8);
-                writer.WriteObjectValue(ProtectedSettings, options);
+#if NET6_0_OR_GREATER
+				writer.WriteRawValue(ProtectedSettings);
+#else
+                using (JsonDocument document = JsonDocument.Parse(ProtectedSettings, ModelSerializationExtensions.JsonDocumentOptions))
+                {
+                    JsonSerializer.Serialize(writer, document.RootElement);
+                }
+#endif
             }
             if (Optional.IsDefined(ForceUpdateTag))
             {
@@ -137,8 +151,8 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Models
             string type = default;
             string typeHandlerVersion = default;
             bool? autoUpgradeMinorVersion = default;
-            VmSSExtensionPropertiesSettings settings = default;
-            VmSSExtensionPropertiesProtectedSettings protectedSettings = default;
+            BinaryData settings = default;
+            BinaryData protectedSettings = default;
             string forceUpdateTag = default;
             IList<string> provisionAfterExtensions = default;
             string provisioningState = default;
@@ -192,7 +206,7 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Models
                             {
                                 continue;
                             }
-                            settings = VmSSExtensionPropertiesSettings.DeserializeVmSSExtensionPropertiesSettings(property0.Value, options);
+                            settings = BinaryData.FromString(property0.Value.GetRawText());
                             continue;
                         }
                         if (property0.NameEquals("protectedSettings"u8))
@@ -201,7 +215,7 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Models
                             {
                                 continue;
                             }
-                            protectedSettings = VmSSExtensionPropertiesProtectedSettings.DeserializeVmSSExtensionPropertiesProtectedSettings(property0.Value, options);
+                            protectedSettings = BinaryData.FromString(property0.Value.GetRawText());
                             continue;
                         }
                         if (property0.NameEquals("forceUpdateTag"u8))
