@@ -10,19 +10,19 @@ using System.Collections.Generic;
 
 namespace Azure.ResourceManager.ServiceFabricManagedClusters.Models
 {
-    /// <summary> Unknown version of ManagedServiceScalingTrigger. </summary>
-    internal partial class UnknownManagedServiceScalingTrigger : ManagedServiceScalingTrigger
+    /// <summary> Unknown version of ScalingMechanism. </summary>
+    internal partial class UnknownScalingMechanism : ManagedServiceScalingMechanism
     {
-        /// <summary> Initializes a new instance of <see cref="UnknownManagedServiceScalingTrigger"/>. </summary>
-        /// <param name="kind"></param>
+        /// <summary> Initializes a new instance of <see cref="UnknownScalingMechanism"/>. </summary>
+        /// <param name="kind"> Specifies the mechanism associated with this scaling policy. </param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal UnknownManagedServiceScalingTrigger(ServiceScalingTriggerKind kind, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(kind, serializedAdditionalRawData)
+        internal UnknownScalingMechanism(ServiceScalingMechanismKind kind, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(kind, serializedAdditionalRawData)
         {
             Kind = kind;
         }
 
-        /// <summary> Initializes a new instance of <see cref="UnknownManagedServiceScalingTrigger"/> for deserialization. </summary>
-        internal UnknownManagedServiceScalingTrigger()
+        /// <summary> Initializes a new instance of <see cref="UnknownScalingMechanism"/> for deserialization. </summary>
+        internal UnknownScalingMechanism()
         {
         }
     }
