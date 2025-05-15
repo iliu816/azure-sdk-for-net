@@ -16,13 +16,13 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Models
         /// <summary> Initializes a new instance of <see cref="UnknownPartition"/>. </summary>
         /// <param name="partitionScheme"></param>
         /// <param name="serializedAdditionalRawData"> Keeps track of any properties unknown to the library. </param>
-        internal UnknownManagedServicePartitionScheme(PartitionScheme partitionScheme, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(partitionScheme, serializedAdditionalRawData)
+        internal UnknownPartition(PartitionScheme partitionScheme, IDictionary<string, BinaryData> serializedAdditionalRawData) : base(partitionScheme, serializedAdditionalRawData)
         {
             PartitionScheme = partitionScheme;
         }
 
-        /// <summary> Initializes a new instance of <see cref="UnknownManagedServicePartitionScheme"/> for deserialization. </summary>
-        internal UnknownManagedServicePartitionScheme()
+        /// <summary> Initializes a new instance of <see cref="UnknownPartition"/> for deserialization. </summary>
+        internal UnknownPartition()
         {
         }
     }

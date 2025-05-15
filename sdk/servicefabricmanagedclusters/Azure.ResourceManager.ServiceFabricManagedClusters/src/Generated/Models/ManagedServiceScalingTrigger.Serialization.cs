@@ -12,7 +12,7 @@ using Azure.Core;
 
 namespace Azure.ResourceManager.ServiceFabricManagedClusters.Models
 {
-    [PersistableModelProxy(typeof(UnknownManagedServiceScalingTrigger))]
+    [PersistableModelProxy(typeof(UnknownScalingTrigger))]
     public partial class ManagedServiceScalingTrigger : IUtf8JsonSerializable, IJsonModel<ManagedServiceScalingTrigger>
     {
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer) => ((IJsonModel<ManagedServiceScalingTrigger>)this).Write(writer, ModelSerializationExtensions.WireOptions);
@@ -81,7 +81,7 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Models
                     case "AverageServiceLoadTrigger": return AverageServiceLoadScalingTrigger.DeserializeAverageServiceLoadScalingTrigger(element, options);
                 }
             }
-            return UnknownManagedServiceScalingTrigger.DeserializeUnknownManagedServiceScalingTrigger(element, options);
+            return UnknownScalingTrigger.DeserializeUnknownScalingTrigger(element, options);
         }
 
         BinaryData IPersistableModel<ManagedServiceScalingTrigger>.Write(ModelReaderWriterOptions options)
